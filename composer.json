@@ -1,0 +1,28 @@
+{
+    "name": "strident/container",
+    "type": "library",
+    "description": "Simple dependency injection container, inspired by Pimple.",
+    "keywords": [ "dic" ],
+    "license": "MIT",
+    "homepage": "https://github.com/Strident/Container",
+    "authors": [
+        {
+            "name": "Elliot Wright",
+            "email": "elliot@elliotwright.co"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.5",
+        "codeclimate/php-test-reporter": "~0.1"
+    },
+    "autoload": {
+        "psr-0": { "Container\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Container\\Tests\\": "tests/" }
+    },
+    "minimum-stability": "dev"
+}
