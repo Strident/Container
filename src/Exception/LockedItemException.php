@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Container\Exception;
+namespace Strident\Container\Exception;
 
 /**
- * Item Not Found Exception
+ * Locked Item Exception
  *
  * @author Elliot Wright <elliot@elliotwright.co>
  */
-class ItemNotFoundException extends \InvalidArgumentException
+class LockedItemException extends \RuntimeException
 {
     /**
      * Constructor.
@@ -26,6 +26,6 @@ class ItemNotFoundException extends \InvalidArgumentException
      */
     public function __construct($name, \Exception $previous = null)
     {
-        parent::__construct(sprintf('Item "%s" could not be found.', $name), 0, $previous);
+        parent::__construct(sprintf("Cannot override locked item \"%s\".", $name), 0, $previous);
     }
 }

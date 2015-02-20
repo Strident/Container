@@ -1,8 +1,8 @@
 {
     "name": "strident/container",
     "type": "library",
-    "description": "Simple dependency injection container, inspired by Pimple.",
-    "keywords": [ "dic" ],
+    "description": "Dependency injection container component designed for ease of use and speed. Built for Trident. Heavily inspired by Pimple.",
+    "keywords": [ "dic", "component", "strident", "trident" ],
     "license": "MIT",
     "homepage": "https://github.com/Strident/Container",
     "authors": [
@@ -19,10 +19,10 @@
         "codeclimate/php-test-reporter": "~0.1"
     },
     "autoload": {
-        "psr-0": { "Container\\": "src/" }
+        "psr-4": { "Strident\\Container\\": "src/" }
     },
     "autoload-dev": {
-        "psr-4": { "Container\\Tests\\": "tests/" }
+        "psr-4": { "Strident\\Container\\Tests\\": "tests/" }
     },
     "minimum-stability": "dev"
 }

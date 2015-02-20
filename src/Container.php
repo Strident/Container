@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Container;
+namespace Strident\Container;
 
 use ArrayAccess;
 use Closure;
@@ -99,27 +99,17 @@ class Container implements ArrayAccess, ContainerInterface
     /**
      * {@inheritDoc}
      */
-    public function set($name, $value)
-    {
-        $this->services->set($name, $value);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function get($name)
     {
         if (!$this->services->has($name)) {
-            throw new InvalidArgumentException(sprintf('Service "%s" is not defined.', $name));
+            throw new InvalidArgumentException(sprintf("Service \"%s\" is not defined.", $name));
         }
 
         /** @var Closure $service */
         $service = $this->services->get($name);
 
         if ($this->services->isLocked($name)
-            || !method_exists($this->services->get($name), '__invoke')) {
+            || !method_exists($this->services->get($name), "__invoke")) {
             return $service;
         }
 
@@ -160,9 +150,9 @@ class Container implements ArrayAccess, ContainerInterface
     /**
      * {@inheritDoc}
      */
-    public function setParameter($name, $value)
+    public function set($name, $value)
     {
-        $this->parameters->set($name, $value);
+        $this->services->set($name, $value);
 
         return $this;
     }
@@ -173,7 +163,7 @@ class Container implements ArrayAccess, ContainerInterface
     public function getParameter($name)
     {
         if (!$this->parameters->has($name)) {
-            throw new InvalidArgumentException(sprintf('Parameter "%s" is not defined.', $name));
+            throw new InvalidArgumentException(sprintf("Parameter \"%s\" is not defined.", $name));
         }
 
         return $this->parameters->get($name);
@@ -193,6 +183,16 @@ class Container implements ArrayAccess, ContainerInterface
     public function removeParameter($name)
     {
         return $this->parameters->remove($name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setParameter($name, $value)
+    {
+        $this->parameters->set($name, $value);
+
+        return $this;
     }
 
     /**
@@ -216,8 +216,10 @@ class Container implements ArrayAccess, ContainerInterface
      */
     public function factory($callable)
     {
-        if (!is_object($callable) || !method_exists($callable, '__invoke')) {
-            throw new InvalidArgumentException('Service definition is not a Closure or invokable object.');
+        if (!is_object($callable) || !method_exists($callable, "__invoke")) {
+            throw new InvalidArgumentException(
+                "Service definition is not a Closure or invokable object."
+            );
         }
 
         $this->factories->attach($callable);
@@ -240,7 +242,10 @@ class Container implements ArrayAccess, ContainerInterface
     {
         if (!$this->services->has($name)) {
             if ($strict) {
-                throw new InvalidArgumentException(sprintf('Service "%s" is not defined.', $name));
+                throw new InvalidArgumentException(sprintf(
+                    "Service \"%s\" is not defined.",
+                    $name
+                ));
             } else {
                 return false;
             }
@@ -248,12 +253,17 @@ class Container implements ArrayAccess, ContainerInterface
 
         $factory = $this->services->get($name);
 
-        if (!is_object($factory) || !method_exists($factory, '__invoke')) {
-            throw new InvalidArgumentException(sprintf('Service "%s" does not contain an object definition.', $name));
+        if (!is_object($factory) || !method_exists($factory, "__invoke")) {
+            throw new InvalidArgumentException(sprintf(
+                "Service \"%s\" does not contain an object definition.",
+                $name
+            ));
         }
 
-        if (!is_object($callable) || !method_exists($callable, '__invoke')) {
-            throw new InvalidArgumentException('Extension service definition is not a Closure or invokable object.');
+        if (!is_object($callable) || !method_exists($callable, "__invoke")) {
+            throw new InvalidArgumentException(
+                "Extension service definition is not a Closure or invokable object."
+            );
         }
 
         $extended = function($c) use($callable, $factory) {

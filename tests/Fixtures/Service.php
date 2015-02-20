@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Container\Tests\Fixtures;
+namespace Strident\Container\Tests\Fixtures;
 
 /**
  * @author Elliot Wright <elliot@elliotwright.co>

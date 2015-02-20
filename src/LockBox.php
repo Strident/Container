@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Container;
+namespace Strident\Container;
 
-use Container\Exception\ItemNotFoundException;
-use Container\Exception\LockedItemException;
+use Strident\Container\Exception\ItemNotFoundException;
+use Strident\Container\Exception\LockedItemException;
 
 /**
  * LockBox stores items, and can lock them on request.

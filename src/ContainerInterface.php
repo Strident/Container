@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Container;
+namespace Strident\Container;
 
 /**
  * Container Interface
@@ -18,16 +18,6 @@ namespace Container;
  */
 interface ContainerInterface
 {
-    /**
-     * Set item in container
-     *
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return mixed
-     */
-    public function set($name, $value);
-
     /**
      * Get item in container
      *
@@ -56,14 +46,14 @@ interface ContainerInterface
     public function remove($name);
 
     /**
-     * Set a parameter
+     * Set item in container
      *
      * @param string $name
      * @param mixed  $value
      *
      * @return mixed
      */
-    public function setParameter($name, $value);
+    public function set($name, $value);
 
     /**
      * Get a parameter
@@ -91,4 +81,14 @@ interface ContainerInterface
      * @return mixed
      */
     public function removeParameter($name);
+
+    /**
+     * Set a parameter
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
+    public function setParameter($name, $value);
 }

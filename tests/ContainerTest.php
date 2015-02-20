@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Container\Tests;
+namespace Strident\Container\Tests;
 
-use Container\Container;
+use Strident\Container\Container;
 
 /**
  * @author Elliot Wright <elliot@elliotwright.co>
@@ -21,72 +21,78 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testSetParameterWithString()
     {
         $container = new Container();
-        $container['param'] = 'value';
+        $container["param"] = "value";
 
-        $this->assertEquals('value', $container['param']);
+        $this->assertEquals("value", $container["param"]);
     }
 
     public function testSetParameterWithObject()
     {
         $container = new Container();
-        $container['param'] = new Fixtures\Service();
+        $container["param"] = new Fixtures\Service();
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $container['param']);
+        $this->assertInstanceOf(
+            "Strident\\Container\\Tests\\Fixtures\\Service",
+            $container["param"]
+        );
     }
 
     public function testHasParameter()
     {
         $container = new Container();
 
-        $this->assertFalse(isset($container['param']));
+        $this->assertFalse(isset($container["param"]));
 
-        $container['param'] = 'value';
+        $container["param"] = "value";
 
-        $this->assertTrue(isset($container['param']));
+        $this->assertTrue(isset($container["param"]));
     }
 
     public function testRemoveParameter()
     {
         $container = new Container();
-        $container['param'] = 'value';
+        $container["param"] = "value";
 
-        $this->assertTrue(isset($container['param']));
+        $this->assertTrue(isset($container["param"]));
 
-        unset($container['param']);
+        unset($container["param"]);
 
-        $this->assertFalse(isset($container['param']));
+        $this->assertFalse(isset($container["param"]));
     }
 
     public function testSetServiceWithString()
     {
         $container = new Container();
-        $container->set('service', 'value');
+        $container->set("service", "value");
 
-        $this->assertEquals('value', $container->get('service'));
+        $this->assertEquals("value", $container->get("service"));
     }
 
     public function testSetServiceWithClosure()
     {
         $container = new Container();
-        $container->set('service', function() {
+        $container->set("service", function() {
             return new Fixtures\Service();
         });
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $container->get('service'));
+        $this->assertInstanceOf(
+            "Strident\\Container\\Tests\\Fixtures\\Service",
+            $container->get("service")
+        );
     }
 
     public function testFactoryServicesShouldBeDifferent()
     {
         $container = new Container();
-        $container->set('service', $container->factory(function() {
+        $container->set("service", $container->factory(function() {
             return new Fixtures\Service();
         }));
 
-        $serviceOne = $container->get('service');
-        $serviceTwo = $container->get('service');
+        $serviceOne = $container->get("service");
+        $serviceTwo = $container->get("service");
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceOne);
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceOne);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceTwo);
 
         $this->assertNotSame($serviceOne, $serviceTwo);
     }
@@ -94,32 +100,32 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testServiceShouldPassContainerAsParameter()
     {
         $container = new Container();
-        $container->set('service', function() {
+        $container->set("service", function() {
             return new Fixtures\Service();
         });
 
-        $container->set('container', function($c) {
+        $container->set("container", function($c) {
             return $c;
         });
 
-        $this->assertNotSame($container, $container->get('service'));
-        $this->assertSame($container, $container->get('container'));
+        $this->assertNotSame($container, $container->get("service"));
+        $this->assertSame($container, $container->get("container"));
     }
 
     public function testHasService()
     {
         $container = new Container();
-        $container->setParameter('param', 'value');
-        $container->setParameter('null', null);
-        $container->set('service', function() {
+        $container->setParameter("param", "value");
+        $container->setParameter("null", null);
+        $container->set("service", function() {
             return new Fixtures\Service();
         });
 
-        $this->assertTrue($container->hasParameter('param'));
-        $this->assertTrue($container->hasParameter('null'));
-        $this->assertTrue($container->has('service'));
-        $this->assertFalse($container->hasParameter('not_here'));
-        $this->assertFalse($container->has('not_here'));
+        $this->assertTrue($container->hasParameter("param"));
+        $this->assertTrue($container->hasParameter("null"));
+        $this->assertTrue($container->has("service"));
+        $this->assertFalse($container->hasParameter("not_here"));
+        $this->assertFalse($container->has("not_here"));
     }
 
     /**
@@ -130,13 +136,13 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testServiceShouldBeShared($service)
     {
         $container = new Container();
-        $container->set('shared', $service);
+        $container->set("shared", $service);
 
-        $serviceOne = $container->get('shared');
-        $serviceTwo = $container->get('shared');
+        $serviceOne = $container->get("shared");
+        $serviceTwo = $container->get("shared");
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceOne);
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceOne);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceTwo);
 
         $this->assertSame($serviceOne, $serviceTwo);
     }
@@ -148,7 +154,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testGetValidatesKeyIsPresent()
     {
         $container = new Container();
-        $container->get('foo');
+        $container->get("foo");
     }
 
     /**
@@ -158,7 +164,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testGetParamValidatesKeyIsPresent()
     {
         $container = new Container();
-        $container->getParameter('foo');
+        $container->getParameter("foo");
     }
 
     /**
@@ -169,29 +175,29 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testExtend($service)
     {
         $container = new Container();
-        $container->set('shared', function() {
+        $container->set("shared", function() {
             return new Fixtures\Service();
         });
 
-        $container->set('factory', $container->factory(function() {
+        $container->set("factory", $container->factory(function() {
             return new Fixtures\Service();
         }));
 
-        $container->extend('shared', $service);
-        $serviceOne = $container->get('shared');
-        $serviceTwo = $container->get('shared');
+        $container->extend("shared", $service);
+        $serviceOne = $container->get("shared");
+        $serviceTwo = $container->get("shared");
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceOne);
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceOne);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceTwo);
         $this->assertSame($serviceOne, $serviceTwo);
         $this->assertSame($serviceOne->value, $serviceTwo->value);
 
-        $container->extend('factory', $service);
-        $serviceOne = $container->get('factory');
-        $serviceTwo = $container->get('factory');
+        $container->extend("factory", $service);
+        $serviceOne = $container->get("factory");
+        $serviceTwo = $container->get("factory");
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceOne);
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $serviceTwo);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceOne);
+        $this->assertInstanceOf("Strident\\Container\\Tests\\Fixtures\\Service", $serviceTwo);
         $this->assertNotSame($serviceOne, $serviceTwo);
         $this->assertNotSame($serviceOne->value, $serviceTwo->value);
     }
@@ -199,17 +205,17 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testExtendDoesNotLeakWithFactories()
     {
         $container = new Container();
-        $container->set('foo', $container->factory(function() { return; }));
-        $container->set('foo', $container->extend('foo', function() { return; }));
-        $container->remove('foo');
+        $container->set("foo", $container->factory(function() { return; }));
+        $container->set("foo", $container->extend("foo", function() { return; }));
+        $container->remove("foo");
 
-        $s = new \ReflectionProperty($container, 'services');
+        $s = new \ReflectionProperty($container, "services");
         $s->setAccessible(true);
-        $i = new \ReflectionProperty($s->getValue($container), 'items');
+        $i = new \ReflectionProperty($s->getValue($container), "items");
         $i->setAccessible(true);
         $this->assertEmpty($i->getValue($s->getValue($container)));
 
-        $f = new \ReflectionProperty($container, 'factories');
+        $f = new \ReflectionProperty($container, "factories");
         $f->setAccessible(true);
         $this->assertCount(0, $f->getValue($container));
     }
@@ -221,7 +227,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testExtendValidatesServiceIsPresent()
     {
         $container = new Container();
-        $container->extend('foo', function($c) {});
+        $container->extend("foo", function($c) {});
     }
 
     public function testExtendValidatesServiceIsPresentWithoutStrict()
@@ -235,26 +241,32 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testKeys()
     {
         $container = new Container();
-        $container->set('foo', function($c) {});
-        $container->set('bar', function($c) {});
+        $container->set("foo", function($c) {});
+        $container->set("bar", function($c) {});
 
-        $this->assertEquals(['foo', 'bar'], $container->keys());
+        $this->assertEquals(["foo", "bar"], $container->keys());
     }
 
     public function testSettingAnInvokableObjectShouldTreatItAsFactory()
     {
         $container = new Container();
-        $container->set('invokable', new Fixtures\Invokable());
+        $container->set("invokable", new Fixtures\Invokable());
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\Service', $container->get('invokable'));
+        $this->assertInstanceOf(
+            "Strident\\Container\\Tests\\Fixtures\\Service",
+            $container->get("invokable")
+        );
     }
 
     public function testSettingNonInvokableObjectShouldTreatItAsInvokedService()
     {
         $container = new Container();
-        $container->set('non_invokable', new Fixtures\NonInvokable());
+        $container->set("non_invokable", new Fixtures\NonInvokable());
 
-        $this->assertInstanceOf('Container\Tests\Fixtures\NonInvokable', $container->get('non_invokable'));
+        $this->assertInstanceOf(
+            "Strident\\Container\\Tests\\Fixtures\\NonInvokable",
+            $container->get("non_invokable")
+        );
     }
 
     /**
@@ -276,8 +288,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testExtendFailsForInvalidServiceDefinitions($service)
     {
         $container = new Container();
-        $container->set('foo', $service);
-        $container->extend('foo', function($c) {});
+        $container->set("foo", $service);
+        $container->extend("foo", function($c) {});
     }
 
     /**
@@ -288,8 +300,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testExtendFailsForEmptyServiceDefinitions($service)
     {
         $container = new Container();
-        $container->set('foo', function($c) {});
-        $container->extend('foo', $service);
+        $container->set("foo", function($c) {});
+        $container->extend("foo", $service);
     }
 
     /**
@@ -322,89 +334,89 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testDefiningNewServiceAfterLock()
     {
         $container = new Container();
-        $container->set('foo', function() {
-            return 'foo';
+        $container->set("foo", function() {
+            return "foo";
         });
 
-        $container->get('foo');
+        $container->get("foo");
 
-        $container->set('bar', function() {
-            return 'bar';
+        $container->set("bar", function() {
+            return "bar";
         });
 
-        $this->assertSame('bar', $container->get('bar'));
+        $this->assertSame("bar", $container->get("bar"));
     }
 
     /**
-     * @expectedException \Container\Exception\LockedItemException
+     * @expectedException \Strident\Container\Exception\LockedItemException
      * @expectedExceptionMessage Cannot override locked item "foo".
      */
     public function testOverridingServiceAfterLock()
     {
         $container = new Container();
-        $container->set('foo', function() {
-            return 'foo';
+        $container->set("foo", function() {
+            return "foo";
         });
 
-        $container->get('foo');
+        $container->get("foo");
 
-        $container->set('foo', function() {
-            return 'bar';
+        $container->set("foo", function() {
+            return "bar";
         });
     }
 
     public function testRemovingServiceAfterLock()
     {
         $container = new Container();
-        $container->set('foo', function() {
-            return 'foo';
+        $container->set("foo", function() {
+            return "foo";
         });
 
-        $foo = $container->get('foo');
+        $foo = $container->get("foo");
 
-        $container->remove('foo');
-        $container->set('foo', function() {
-            return 'bar';
+        $container->remove("foo");
+        $container->set("foo", function() {
+            return "bar";
         });
 
-        $this->assertSame('bar', $container->get('foo'));
+        $this->assertSame("bar", $container->get("foo"));
     }
 
     public function testExtendingService()
     {
         $container = new Container();
-        $container->set('foo', function() {
-            return 'foo';
+        $container->set("foo", function() {
+            return "foo";
         });
 
-        $container->extend('foo', function($foo) {
+        $container->extend("foo", function($foo) {
             return "$foo.bar";
         });
 
-        $container->extend('foo', function($foo) {
+        $container->extend("foo", function($foo) {
             return "$foo.baz";
         });
 
-        $this->assertSame('foo.bar.baz', $container->get('foo'));
+        $this->assertSame("foo.bar.baz", $container->get("foo"));
     }
 
     public function testExtendingServiceAfterOtherServiceLock()
     {
         $container = new Container();
-        $container->set('foo', function() {
-            return 'foo';
+        $container->set("foo", function() {
+            return "foo";
         });
 
-        $container->set('bar', function() {
-            return 'bar';
+        $container->set("bar", function() {
+            return "bar";
         });
 
-        $container->get('foo');
+        $container->get("foo");
 
-        $container->extend('bar', function($bar) {
+        $container->extend("bar", function($bar) {
             return "$bar.baz";
         });
 
-        $this->assertSame('bar.baz', $container->get('bar'));
+        $this->assertSame("bar.baz", $container->get("bar"));
     }
 }

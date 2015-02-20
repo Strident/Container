@@ -18,9 +18,58 @@ $ composer require strident/container ~1.0
 The container is incredibly simple to instantiate. Simply do the following:
 
 ```php
-use Container\Container;
+use Strident\Container\Container;
 
 $container = new Container();
+```
+
+###Defining Services
+
+From there, you can define services like so:
+
+```php
+// 'Service' class defined somewhere, and 'dependency_name' service defined
+
+$container->set("service_name", function($container) {
+    return new Service($container->get("dependency_name"));
+});
+```
+
+The services are lazy loaded (i.e. nothing is instantiated until it is called).
+
+###Extending a Service After Definition
+
+You may also extend services once they have been defined (for example, if you wish to augment a service, alter settings, swap out dependencies etc). But note that once a service is used, it becomes locked and cannot be modified further.
+
+```php
+$container->extend("service_name", function($service, $container) {
+    $service->doSomething();
+    $service->addSomething($container->get("dependency_name"));
+    
+    return $service;
+});
+```
+
+###Defining Factory Services
+
+If you wish to return a new instance of your service every time instead of the same instance, you may define a factory service like so:
+
+```php
+$container->set("service_name", $container->factory(function($container) {
+    return new Service($container->get("dependency_name"));
+}));
+```
+
+###Parameters
+
+Parameters are get / set by accessing the container like an array:
+
+```php
+// Set
+$container["foo"] = "A parameter can be anything";
+
+// Get
+$foo = $container["foo"];
 ```
 
 [1]: https://github.com/silexphp/Pimple
