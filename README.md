@@ -10,7 +10,7 @@ Dependency injection container component designed for ease of use and speed. Bui
 Installation is available via Composer. Add the package to your composer.json:
 
 ```
-$ composer require strident/container ~1.0
+$ composer require strident/container ~2.0
 ```
 
 ##Usage
